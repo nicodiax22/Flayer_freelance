@@ -11,6 +11,23 @@
   --shadow: 0 20px 60px rgba(18, 24, 38, 0.16);
 }
 
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 8px 12px;
+  border-radius: 6px;
+  z-index: 9999;
+  box-shadow: 0 6px 18px rgba(18,24,38,0.12);
+}
+.skip-link:focus {
+  left: 16px;
+  top: 16px;
+}
+
 * {
   box-sizing: border-box;
 }

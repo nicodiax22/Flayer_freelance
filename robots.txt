@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://flayer-freelance.vercel.app/sitemap.xml
