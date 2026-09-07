@@ -15,12 +15,14 @@ No usa framework ni build: es HTML, CSS y un poco de JavaScript en línea.
 ## El formulario
 
 No hay backend. Al enviar, el formulario arma un mensaje con los datos
-cargados y abre WhatsApp para que la persona lo revise antes de mandarlo.
-El número está en `index.html`, en los enlaces `wa.me`.
+cargados y permite elegir entre WhatsApp o correo. En ambos casos abre la
+aplicación correspondiente con el mensaje listo para que la persona lo revise
+antes de mandarlo. El número y el correo de destino están en `index.html`.
 
-Si en algún momento se quiere recibir los mensajes por correo en lugar de
-WhatsApp, hace falta un endpoint: una función serverless en Vercel con un
-servicio de envío, o un servicio de formularios externo.
+Si en algún momento se quiere enviar el correo directamente desde la página,
+sin abrir la aplicación del visitante, hace falta un endpoint: una función
+serverless en Vercel con un servicio de envío, o un servicio de formularios
+externo.
 
 ## Deploy en Vercel
 

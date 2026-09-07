@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260907-1" />
+    <link rel="stylesheet" href="styles.css?v=20260907-2" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -357,7 +357,21 @@
               <input id="f-contacto" name="contacto" type="text" autocomplete="tel" />
             </div>
 
-            <button class="btn btn-primary btn-block" type="submit">Enviar mi caso</button>
+            <fieldset class="delivery">
+              <legend>¿Cómo querés enviar tu consulta?</legend>
+              <div class="delivery-options">
+                <label class="delivery-option">
+                  <input type="radio" name="envio" value="whatsapp" checked />
+                  <span>WhatsApp</span>
+                </label>
+                <label class="delivery-option">
+                  <input type="radio" name="envio" value="correo" />
+                  <span>Correo</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <button class="btn btn-primary btn-block" id="form-submit" type="submit">Enviar por WhatsApp</button>
             <p class="form-note" id="form-note" role="status">
               Se abre WhatsApp con tu mensaje ya escrito. Podés revisarlo antes de mandarlo.
             </p>
@@ -404,10 +418,12 @@
         io.observe(clock);
       })();
 
-      // El formulario arma un mensaje legible y lo abre en WhatsApp.
+      // El formulario arma un mensaje legible y deja elegir WhatsApp o correo.
       (function () {
         var form = document.getElementById("form-contacto");
         var note = document.getElementById("form-note");
+        var submit = document.getElementById("form-submit");
+        var contacto = document.getElementById("f-contacto");
         if (!form) return;
 
         var requeridos = ["f-nombre", "f-negocio", "f-problema", "f-contacto"];
@@ -416,6 +432,21 @@
           document.getElementById(id).addEventListener("input", function () {
             this.classList.remove("is-invalid");
           });
+        });
+
+        var actualizarEnvio = function () {
+          var envio = form.elements.envio.value;
+          var porCorreo = envio === "correo";
+          submit.textContent = porCorreo ? "Enviar por correo" : "Enviar por WhatsApp";
+          note.textContent = porCorreo
+            ? "Se abre tu aplicación de correo con el mensaje ya escrito. Podés revisarlo antes de mandarlo."
+            : "Se abre WhatsApp con tu mensaje ya escrito. Podés revisarlo antes de mandarlo.";
+          contacto.autocomplete = porCorreo ? "email" : "tel";
+          note.classList.remove("is-error");
+        };
+
+        Array.prototype.forEach.call(form.elements.envio, function (opcion) {
+          opcion.addEventListener("change", actualizarEnvio);
         });
 
         form.addEventListener("submit", function (ev) {
@@ -441,9 +472,6 @@
             return document.getElementById(id).value.trim();
           };
 
-          note.classList.remove("is-error");
-          note.textContent = "Abriendo WhatsApp con tu mensaje…";
-
           var texto =
             "Hola Nicolás, te escribo desde tu web.\n\n" +
             "Nombre: " + val("f-nombre") + "\n" +
@@ -452,11 +480,20 @@
             "Lo que me gustaría sacarme de encima:\n" + val("f-problema") + "\n\n" +
             "Me podés contactar a: " + val("f-contacto");
 
-          window.open(
-            "https://wa.me/5491126251198?text=" + encodeURIComponent(texto),
-            "_blank",
-            "noopener"
-          );
+          note.classList.remove("is-error");
+
+          if (form.elements.envio.value === "correo") {
+            note.textContent = "Abriendo tu aplicación de correo…";
+            window.location.href =
+              "mailto:nicodiax22@gmail.com?subject=" +
+              encodeURIComponent("Consulta desde la web — " + val("f-nombre")) +
+              "&body=" +
+              encodeURIComponent(texto);
+            return;
+          }
+
+          note.textContent = "Abriendo WhatsApp con tu mensaje…";
+          window.open("https://wa.me/5491126251198?text=" + encodeURIComponent(texto), "_blank", "noopener");
         });
       })();
     </script>
